@@ -1,0 +1,29 @@
+{
+  "name": "@smilintux/skskyforge",
+  "version": "1.0.0",
+  "description": "SKSkyforge - Sovereign Alignment Calendar System. Daily cosmic guidance with crontab integration.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "skskyforge-js": "bin/cli.js"
+  },
+  "keywords": [
+    "skskyforge",
+    "alignment-calendar",
+    "astrology",
+    "numerology",
+    "biorhythm",
+    "daily-guidance",
+    "sovereign"
+  ],
+  "author": "smilinTux <chefboyrdave2.1@gmail.com>",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smilinTux/skyforge.git"
+  },
+  "homepage": "https://github.com/smilinTux/skyforge",
+  "bugs": {
+    "url": "https://github.com/smilinTux/skyforge/issues"
+  }
+}
