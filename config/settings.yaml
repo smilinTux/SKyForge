@@ -1,13 +1,13 @@
-# SkyForge Configuration Settings
+# SKSkyforge Configuration Settings
 # ================================
-# Global settings for the SkyForge system
+# Global settings for the SKSkyforge system
 #
 # Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 # SK = staycuriousANDkeepsmilin 🐧
 
 # Application Settings
 app:
-  name: SkyForge
+  name: SKSkyforge
   version: 1.0.0
   description: "Sovereign Alignment Calendar System"
   
@@ -23,7 +23,7 @@ paths:
   ephemeris_dir: ./ephe
   
   # Directory for reference data
-  data_dir: ./src/skyforge/data
+  data_dir: ./src/skskyforge/data
 
 # Default Generation Settings
 generation:

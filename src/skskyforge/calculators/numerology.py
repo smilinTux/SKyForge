@@ -1,5 +1,5 @@
 """
-Numerology calculator for SkyForge.
+Numerology calculator for SKSkyforge.
 
 Implements Pythagorean numerology calculations for life path,
 personal year, personal month, and personal day numbers.
@@ -7,7 +7,7 @@ personal year, personal month, and personal day numbers.
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

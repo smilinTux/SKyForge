@@ -1,12 +1,12 @@
 """
-Risk analysis for SkyForge.
+Risk analysis for SKSkyforge.
 
 Calculates multi-domain risk scores based on biorhythm, moon, and other factors.
 
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

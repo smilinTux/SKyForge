@@ -1,8 +1,8 @@
-# SkyForge 🌟
+# SKSkyforge 🌟
 
 > **"Forge your sovereign path through the cosmos"**
 
-SkyForge is a comprehensive daily preparation system that generates personalized sovereign alignment calendars. It integrates 10 domains of guidance into a unified system for optimal daily performance.
+SKSkyforge is a comprehensive daily preparation system that generates personalized sovereign alignment calendars. It integrates 10 domains of guidance into a unified system for optimal daily performance.
 
 ## ✨ Features
 
@@ -53,10 +53,10 @@ pip install -e .
 
 ```bash
 # Interactive profile creation
-skyforge profile create
+skskyforge profile create
 
 # Or with all options
-skyforge profile create \
+skskyforge profile create \
   --name "my_profile" \
   --birth-date "1985-03-15" \
   --birth-time "14:30" \
@@ -67,16 +67,16 @@ skyforge profile create \
 
 ```bash
 # Generate full year calendar
-skyforge generate --year 2026
+skskyforge generate --year 2026
 
 # Generate single month
-skyforge generate --year 2026 --month 1
+skskyforge generate --year 2026 --month 1
 
 # Generate with specific format
-skyforge generate --year 2026 --format pdf
+skskyforge generate --year 2026 --format pdf
 
 # Preview a single day
-skyforge preview --date 2026-01-15
+skskyforge preview --date 2026-01-15
 ```
 
 ## 📋 Requirements
@@ -87,7 +87,7 @@ skyforge preview --date 2026-01-15
 ## 🏗️ Project Structure
 
 ```
-skyforge/
+skskyforge/
 ├── agent.md              # AI agent instructions
 ├── prd.txt               # Product requirements
 ├── requirements.txt      # Python dependencies
@@ -95,7 +95,7 @@ skyforge/
 ├── config/
 │   ├── settings.yaml     # Global settings
 │   └── profiles/         # User profiles
-├── src/skyforge/
+├── src/skskyforge/
 │   ├── cli.py            # Command-line interface
 │   ├── models/           # Data models
 │   ├── calculators/      # Domain calculators
@@ -121,8 +121,8 @@ cp .env.example .env
 ```
 
 Key settings:
-- `SKYFORGE_OUTPUT_DIR` - Output directory for generated files
-- `SKYFORGE_DEFAULT_PROFILE` - Default profile name
+- `SKSKYFORGE_OUTPUT_DIR` - Output directory for generated files
+- `SKSKYFORGE_DEFAULT_PROFILE` - Default profile name
 - `SWISSEPH_PATH` - Swiss Ephemeris data path
 
 ### Settings File
@@ -142,7 +142,7 @@ Edit `config/settings.yaml` to customize:
 pytest
 
 # Run with coverage
-pytest --cov=skyforge
+pytest --cov=skskyforge
 
 # Run specific test file
 pytest tests/test_calculators/test_numerology.py
@@ -165,7 +165,7 @@ mypy src/
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  SKYFORGE DAILY SOVEREIGN ALIGNMENT                              ║
+║  SKSKYFORGE DAILY SOVEREIGN ALIGNMENT                              ║
 ║  Wednesday, January 15, 2026 (Day 15 of 365)                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║  DAILY THEME: "Grounded Action with Emotional Wisdom"            ║
@@ -206,4 +206,4 @@ See [LICENSE](LICENSE) for the full license text.
 
 ---
 
-**SkyForge** - *Scientifically mapped. Spiritually grounded.*
+**SKSkyforge** - *Scientifically mapped. Spiritually grounded.*

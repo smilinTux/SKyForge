@@ -1,5 +1,5 @@
 """
-Wellness analyzer for SkyForge.
+Wellness analyzer for SKSkyforge.
 
 Generates exercise and nourishment recommendations based on
 biorhythm and moon data.
@@ -7,7 +7,7 @@ biorhythm and moon data.
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

@@ -9,7 +9,7 @@ import pytest
 import math
 from datetime import date, timedelta
 
-from skyforge.calculators.biorhythm import (
+from skskyforge.calculators.biorhythm import (
     calculate_cycle_value,
     get_cycle_phase,
     is_critical_day,

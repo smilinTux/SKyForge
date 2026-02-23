@@ -8,7 +8,7 @@ SK = staycuriousANDkeepsmilin 🐧
 import pytest
 from datetime import date
 
-from skyforge.calculators.numerology import (
+from skskyforge.calculators.numerology import (
     reduce_to_single_digit,
     calculate_life_path,
     calculate_personal_year,

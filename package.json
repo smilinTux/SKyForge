@@ -1,6 +1,6 @@
 {
   "name": "@smilintux/skskyforge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SKSkyforge - Sovereign Alignment Calendar System. Daily cosmic guidance with crontab integration.",
   "main": "index.js",
   "types": "index.d.ts",

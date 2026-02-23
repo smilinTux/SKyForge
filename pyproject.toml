@@ -1,4 +1,4 @@
-# SkyForge - Sovereign Alignment Calendar System
+# SKSkyforge - Sovereign Alignment Calendar System
 # pyproject.toml - Project Configuration
 
 [build-system]
@@ -6,14 +6,14 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "skyforge"
-version = "1.0.0"
-description = "Sovereign Alignment Calendar System - Forge your path through the cosmos"
+name = "skskyforge"
+version = "1.1.0"
+description = "SKSkyforge - Sovereign Alignment Calendar System with daily crontab reports"
 readme = "README.md"
-license = {text = "AGPL-3.0"}
+license = "AGPL-3.0-or-later"
 requires-python = ">=3.10"
 authors = [
-    {name = "SkyForge Team"}
+    {name = "smilinTux", email = "chefboyrdave2.1@gmail.com"}
 ]
 keywords = [
     "astrology",
@@ -25,20 +25,21 @@ keywords = [
     "wellness",
     "spiritual",
     "daily-guidance",
-    "sovereign-alignment"
+    "sovereign-alignment",
+    "crontab",
+    "openclaw"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Astronomy",
-    "Topic :: Religion",
     "Topic :: Utilities",
 ]
 
@@ -75,17 +76,17 @@ dev = [
     "mypy>=1.8.0,<2.0.0",
 ]
 all = [
-    "skyforge[web,dev]",
+    "skskyforge[web,dev]",
 ]
 
 [project.scripts]
-skyforge = "skyforge.cli:cli"
+skskyforge = "skskyforge.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/skyforge"
-Documentation = "https://github.com/yourusername/skyforge#readme"
-Repository = "https://github.com/yourusername/skyforge"
-Issues = "https://github.com/yourusername/skyforge/issues"
+Homepage = "https://github.com/smilinTux/skyforge"
+Documentation = "https://github.com/smilinTux/skyforge#readme"
+Repository = "https://github.com/smilinTux/skyforge"
+Issues = "https://github.com/smilinTux/skyforge/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -94,13 +95,12 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-skyforge = [
+skskyforge = [
     "data/*.json",
     "data/spiritual_library/*.json",
     "web/templates/*.html",
 ]
 
-# Black Configuration
 [tool.black]
 line-length = 88
 target-version = ["py310", "py311", "py312"]
@@ -121,32 +121,30 @@ exclude = '''
 )/
 '''
 
-# Ruff Configuration
 [tool.ruff]
 line-length = 88
 target-version = "py310"
 select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # Pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
 ]
 ignore = [
-    "E501",  # line too long (handled by black)
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
+    "E501",
+    "B008",
+    "C901",
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]  # unused imports in __init__
+"__init__.py" = ["F401"]
 
 [tool.ruff.isort]
-known-first-party = ["skyforge"]
+known-first-party = ["skskyforge"]
 
-# MyPy Configuration
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
@@ -168,7 +166,6 @@ module = [
 ]
 ignore_missing_imports = true
 
-# Pytest Configuration
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-ra -q --strict-markers"
@@ -179,9 +176,8 @@ markers = [
     "integration: marks tests as integration tests",
 ]
 
-# Coverage Configuration
 [tool.coverage.run]
-source = ["src/skyforge"]
+source = ["src/skskyforge"]
 branch = true
 omit = [
     "*/tests/*",

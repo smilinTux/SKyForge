@@ -1,8 +1,8 @@
-# AGENT.MD - SkyForge Sovereign Alignment Calendar System
+# AGENT.MD - SKSkyforge Sovereign Alignment Calendar System
 
 > **Tagline**: "Forge your sovereign path through the cosmos"
 
-This document provides comprehensive instructions for AI coding agents working on the SkyForge project. It contains all specifications, algorithms, data models, and coding guidelines needed to build and maintain this system.
+This document provides comprehensive instructions for AI coding agents working on the SKSkyforge project. It contains all specifications, algorithms, data models, and coding guidelines needed to build and maintain this system.
 
 ---
 
@@ -26,7 +26,7 @@ This document provides comprehensive instructions for AI coding agents working o
 
 ### 1.1 Purpose
 
-SkyForge is a Python-based system that generates **fully integrated daily sovereign alignment calendars** for any year and any user. It combines **10 domains** of guidance into a unified daily preparation system for **optimal performance**.
+SKSkyforge is a Python-based system that generates **fully integrated daily sovereign alignment calendars** for any year and any user. It combines **10 domains** of guidance into a unified daily preparation system for **optimal performance**.
 
 ### 1.2 Core Features
 
@@ -67,7 +67,7 @@ Plus: Meditation practices, journaling prompts, morning/evening rituals.
 ```bash
 # Clone the repository
 git clone <repository_url>
-cd skyforge
+cd skskyforge
 
 # Create virtual environment
 python -m venv venv
@@ -81,7 +81,7 @@ pip install -r requirements.txt
 pip install -e .
 
 # Download Swiss Ephemeris data files
-python -m skyforge.setup_ephemeris
+python -m skskyforge.setup_ephemeris
 ```
 
 ### 2.3 Environment Variables
@@ -99,10 +99,10 @@ Required variables:
 GEOCODING_API_KEY=your_api_key_here
 
 # Output directory
-SKYFORGE_OUTPUT_DIR=./output
+SKSKYFORGE_OUTPUT_DIR=./output
 
 # Default profile name
-SKYFORGE_DEFAULT_PROFILE=default
+SKSKYFORGE_DEFAULT_PROFILE=default
 
 # Swiss Ephemeris data path
 SWISSEPH_PATH=./ephe
@@ -114,7 +114,7 @@ The system requires Swiss Ephemeris data files for accurate astronomical calcula
 
 ```bash
 # The setup script downloads required ephemeris files
-python -m skyforge.setup_ephemeris
+python -m skskyforge.setup_ephemeris
 
 # Files are stored in ./ephe directory:
 # - sepl_18.se1 (planets 1800-2400)
@@ -185,7 +185,7 @@ python -m skyforge.setup_ephemeris
 ### 3.2 File Structure
 
 ```
-skyforge/
+skskyforge/
 ├── agent.md                      # AI agent instructions (THIS FILE)
 ├── prd.txt                       # Product requirements document
 ├── requirements.txt              # Python dependencies
@@ -200,7 +200,7 @@ skyforge/
 │       └── default.yaml          # Default user profile
 │
 ├── src/
-│   └── skyforge/
+│   └── skskyforge/
 │       ├── __init__.py
 │       ├── cli.py                # Click-based CLI
 │       ├── main.py               # Entry point
@@ -455,7 +455,7 @@ See Section 5 for complete model definitions for each domain.
 
 ### 5.1 Moon Phase & Sign Calculator
 
-**File**: `src/skyforge/calculators/moon.py`
+**File**: `src/skskyforge/calculators/moon.py`
 
 **Algorithm**:
 
@@ -582,7 +582,7 @@ class MoonData(BaseModel):
 
 ### 5.2 Numerology Calculator
 
-**File**: `src/skyforge/calculators/numerology.py`
+**File**: `src/skskyforge/calculators/numerology.py`
 
 **Algorithms**:
 
@@ -696,7 +696,7 @@ class NumerologyData(BaseModel):
 
 ### 5.3 Biorhythm Calculator
 
-**File**: `src/skyforge/calculators/biorhythm.py`
+**File**: `src/skskyforge/calculators/biorhythm.py`
 
 **Algorithm**:
 
@@ -806,7 +806,7 @@ class BiorhythmData(BaseModel):
 
 ### 5.4 Solar Return Calculator
 
-**File**: `src/skyforge/calculators/solar_return.py`
+**File**: `src/skskyforge/calculators/solar_return.py`
 
 **Algorithm**:
 
@@ -896,7 +896,7 @@ class SolarTransitData(BaseModel):
 
 ### 5.5 Human Design Calculator
 
-**File**: `src/skyforge/calculators/human_design.py`
+**File**: `src/skskyforge/calculators/human_design.py`
 
 **Algorithm**:
 
@@ -1022,7 +1022,7 @@ class HumanDesignData(BaseModel):
 
 ### 5.6 I Ching Calculator
 
-**File**: `src/skyforge/calculators/i_ching.py`
+**File**: `src/skskyforge/calculators/i_ching.py`
 
 The I Ching integration derives from Human Design gates (which are based on the 64 hexagrams).
 
@@ -1102,7 +1102,7 @@ class IChingData(BaseModel):
 
 ### 5.7 Risk Analysis
 
-**File**: `src/skyforge/analyzers/risk.py`
+**File**: `src/skskyforge/analyzers/risk.py`
 
 ```python
 def calculate_risk_analysis(
@@ -1217,7 +1217,7 @@ class RiskAnalysisData(BaseModel):
 
 ### 5.8 Wellness Analyzer
 
-**File**: `src/skyforge/analyzers/wellness.py`
+**File**: `src/skskyforge/analyzers/wellness.py`
 
 ```python
 def generate_exercise_recommendation(
@@ -1341,7 +1341,7 @@ def generate_nourishment_guidance(
 
 ### 5.9 Spiritual Reading Selector
 
-**File**: `src/skyforge/analyzers/spiritual.py`
+**File**: `src/skskyforge/analyzers/spiritual.py`
 
 ```python
 def select_spiritual_reading(
@@ -1399,7 +1399,7 @@ def select_spiritual_reading(
 
 ### 6.1 CLI Commands
 
-**File**: `src/skyforge/cli.py`
+**File**: `src/skskyforge/cli.py`
 
 ```python
 import click
@@ -1411,7 +1411,7 @@ console = Console()
 @click.group()
 @click.version_option()
 def cli():
-    """SkyForge - Sovereign Alignment Calendar Generator"""
+    """SKSkyforge - Sovereign Alignment Calendar Generator"""
     pass
 
 
@@ -1474,14 +1474,14 @@ if __name__ == "__main__":
 
 ### 6.2 Web API Endpoints
 
-**File**: `src/skyforge/web/app.py`
+**File**: `src/skskyforge/web/app.py`
 
 ```python
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
 app = FastAPI(
-    title="SkyForge API",
+    title="SKSkyforge API",
     description="Sovereign Alignment Calendar API",
     version="1.0.0"
 )
@@ -1534,7 +1534,7 @@ async def download_file(filename: str):
 
 ### 7.1 Daily Entry Generator
 
-**File**: `src/skyforge/generators/daily_entry.py`
+**File**: `src/skskyforge/generators/daily_entry.py`
 
 ```python
 def generate_daily_entry(
@@ -1610,7 +1610,7 @@ def generate_daily_entry(
 
 ### 7.2 PDF Export
 
-**File**: `src/skyforge/generators/pdf_export.py`
+**File**: `src/skskyforge/generators/pdf_export.py`
 
 Uses ReportLab to generate formatted PDF calendars with:
 - Daily pages with all 10 domains
@@ -1620,7 +1620,7 @@ Uses ReportLab to generate formatted PDF calendars with:
 
 ### 7.3 Excel Export
 
-**File**: `src/skyforge/generators/excel_export.py`
+**File**: `src/skskyforge/generators/excel_export.py`
 
 Uses OpenPyXL to generate spreadsheets with:
 - One row per day
@@ -1667,7 +1667,7 @@ Each module must have tests covering:
 
 import pytest
 from datetime import date
-from skyforge.calculators.numerology import (
+from skskyforge.calculators.numerology import (
     calculate_life_path,
     calculate_personal_year,
     calculate_personal_day,
@@ -1739,7 +1739,7 @@ class TestPersonalDay:
 pytest tests/
 
 # Run with coverage
-pytest --cov=skyforge tests/
+pytest --cov=skskyforge tests/
 
 # Run specific test file
 pytest tests/test_calculators/test_numerology.py
@@ -1807,8 +1807,8 @@ import swisseph as swe
 from pydantic import BaseModel, Field
 
 # Local
-from skyforge.models import BirthData, Location
-from skyforge.calculators.ephemeris import datetime_to_jd
+from skskyforge.models import BirthData, Location
+from skskyforge.calculators.ephemeris import datetime_to_jd
 ```
 
 ### 9.4 Naming Conventions
@@ -1822,17 +1822,17 @@ from skyforge.calculators.ephemeris import datetime_to_jd
 ### 9.5 Error Handling
 
 ```python
-class SkyForgeError(Exception):
-    """Base exception for SkyForge."""
+class SKSkyforgeError(Exception):
+    """Base exception for SKSkyforge."""
     pass
 
 
-class ProfileNotFoundError(SkyForgeError):
+class ProfileNotFoundError(SKSkyforgeError):
     """Raised when a profile cannot be found."""
     pass
 
 
-class CalculationError(SkyForgeError):
+class CalculationError(SKSkyforgeError):
     """Raised when a calculation fails."""
     pass
 
@@ -1859,7 +1859,7 @@ def load_profile(name: str) -> UserProfile:
 ### 10.2 Environment Variables
 
 ```python
-# src/skyforge/config.py
+# src/skskyforge/config.py
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
@@ -1871,7 +1871,7 @@ class Settings(BaseSettings):
     swisseph_path: str = "./ephe"
     
     class Config:
-        env_prefix = "SKYFORGE_"
+        env_prefix = "SKSKYFORGE_"
         env_file = ".env"
 ```
 
@@ -1885,7 +1885,7 @@ All user inputs are validated through Pydantic models before processing.
 
 ### 11.1 Data Files Location
 
-All reference data is stored in `src/skyforge/data/`:
+All reference data is stored in `src/skskyforge/data/`:
 
 - `gates_hexagrams.json` - Human Design gates to I Ching mapping
 - `zodiac_signs.json` - Sign characteristics and correspondences
@@ -1943,7 +1943,7 @@ All reference data is stored in `src/skyforge/data/`:
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  SKYFORGE DAILY SOVEREIGN ALIGNMENT                              ║
+║  SKSKYFORGE DAILY SOVEREIGN ALIGNMENT                              ║
 ║  Wednesday, January 15, 2026 (Day 15 of 365)                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║  DAILY THEME: "Grounded Action with Emotional Wisdom"            ║
@@ -2067,4 +2067,4 @@ All reference data is stored in `src/skyforge/data/`:
 
 ---
 
-*This document is maintained as the authoritative guide for AI coding agents working on the SkyForge project. Update this file when making significant architectural changes or adding new features.*
+*This document is maintained as the authoritative guide for AI coding agents working on the SKSkyforge project. Update this file when making significant architectural changes or adding new features.*

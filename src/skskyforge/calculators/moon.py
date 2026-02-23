@@ -1,5 +1,5 @@
 """
-Moon phase and sign calculator for SkyForge.
+Moon phase and sign calculator for SKSkyforge.
 
 Calculates lunar phases, zodiac signs, and void-of-course periods
 using Swiss Ephemeris.
@@ -7,7 +7,7 @@ using Swiss Ephemeris.
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

@@ -1,12 +1,12 @@
 """
-SkyForge - Sovereign Alignment Calendar System
+SKSkyforge - Sovereign Alignment Calendar System
 
 "Forge your sovereign path through the cosmos"
 
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

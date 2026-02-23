@@ -1,5 +1,5 @@
 """
-Daily entry generator for SkyForge.
+Daily entry generator for SKSkyforge.
 
 Orchestrates all calculators and analyzers to produce complete
 daily sovereign alignment guides.
@@ -7,7 +7,7 @@ daily sovereign alignment guides.
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
 SK = staycuriousANDkeepsmilin 🐧
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 

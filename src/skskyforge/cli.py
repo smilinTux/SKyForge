@@ -1,14 +1,18 @@
 """
-SkyForge Command Line Interface.
+SKSkyforge Command Line Interface.
 
 Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
-SK = staycuriousANDkeepsmilin 🐧
+SK = staycuriousANDkeepsmilin
 
-This file is part of SkyForge.
+This file is part of SKSkyforge.
 Licensed under AGPL-3.0. See LICENSE for details.
 """
 
 import json
+import os
+import shutil
+import subprocess
+import textwrap
 from datetime import date, datetime
 from pathlib import Path
 from typing import Optional
@@ -32,10 +36,10 @@ from .calculators import calculate_life_path
 
 console = Console()
 
-# Default paths
-DEFAULT_CONFIG_DIR = Path("./config")
+# Default paths - use ~/.skskyforge for user-level config
+DEFAULT_CONFIG_DIR = Path.home() / ".skskyforge"
 DEFAULT_PROFILES_DIR = DEFAULT_CONFIG_DIR / "profiles"
-DEFAULT_OUTPUT_DIR = Path("./output")
+DEFAULT_OUTPUT_DIR = DEFAULT_CONFIG_DIR / "output"
 
 
 def get_profiles_dir() -> Path:
@@ -53,10 +57,10 @@ def get_output_dir() -> Path:
 
 
 @click.group()
-@click.version_option(version="1.0.0", prog_name="SkyForge")
+@click.version_option(version="1.0.0", prog_name="SKSkyforge")
 def cli():
     """
-    🌟 SkyForge - Sovereign Alignment Calendar Generator
+    🌟 SKSkyforge - Sovereign Alignment Calendar Generator
     
     Forge your sovereign path through the cosmos.
     
@@ -85,11 +89,11 @@ def generate(year: int, profile: str, month: Optional[int], formats: tuple, outp
     
     Examples:
     
-        skyforge generate --year 2026
+        skskyforge generate --year 2026
         
-        skyforge generate --year 2026 --month 1 --format pdf
+        skskyforge generate --year 2026 --month 1 --format pdf
         
-        skyforge generate --year 2026 --profile john --format json --format excel
+        skskyforge generate --year 2026 --profile john --format json --format excel
     """
     # Load profile
     profiles_dir = get_profiles_dir()
@@ -97,7 +101,7 @@ def generate(year: int, profile: str, month: Optional[int], formats: tuple, outp
     
     if not profile_path.exists():
         console.print(f"[red]Error:[/red] Profile '{profile}' not found.")
-        console.print(f"Create it with: [cyan]skyforge profile create --name {profile}[/cyan]")
+        console.print(f"Create it with: [cyan]skskyforge profile create --name {profile}[/cyan]")
         raise SystemExit(1)
     
     try:
@@ -126,7 +130,7 @@ def generate(year: int, profile: str, month: Optional[int], formats: tuple, outp
         f"Profile: [green]{profile}[/green]\n"
         f"Days: [yellow]{total_days}[/yellow]\n"
         f"Formats: [magenta]{', '.join(formats)}[/magenta]",
-        title="🌟 SkyForge",
+        title="🌟 SKSkyforge",
     ))
     
     # Generate entries
@@ -152,7 +156,7 @@ def generate(year: int, profile: str, month: Optional[int], formats: tuple, outp
     # Export to requested formats
     for fmt in formats:
         if fmt == "json":
-            filename = f"skyforge_{profile}_{period_name.replace(' ', '_')}.json"
+            filename = f"skskyforge_{profile}_{period_name.replace(' ', '_')}.json"
             filepath = output_dir / filename
             
             # Convert to JSON-serializable format
@@ -188,7 +192,7 @@ def preview(target_date: str, profile: str):
     
     Example:
     
-        skyforge preview --date 2026-01-15
+        skskyforge preview --date 2026-01-15
     """
     # Parse date
     try:
@@ -219,7 +223,7 @@ def display_daily_entry(entry):
     """Display a daily entry in rich format."""
     # Header
     console.print(Panel(
-        f"[bold cyan]SKYFORGE DAILY SOVEREIGN ALIGNMENT[/bold cyan]\n"
+        f"[bold cyan]SKSKYFORGE DAILY SOVEREIGN ALIGNMENT[/bold cyan]\n"
         f"[bold]{entry.day_of_week}, {entry.date.strftime('%B %d, %Y')}[/bold] "
         f"(Day {entry.day_of_year} of 365)",
         title="🌟",
@@ -261,6 +265,349 @@ def display_daily_entry(entry):
 
 
 # =============================================================================
+# Daily Report Command
+# =============================================================================
+
+
+def format_daily_markdown(entry) -> str:
+    """Format a daily entry as markdown text suitable for chat or file output.
+
+    Args:
+        entry: DailyPreparation model instance.
+
+    Returns:
+        str: Markdown-formatted daily report.
+    """
+    lines = [
+        f"# SKSkyforge Daily Sovereign Alignment",
+        f"## {entry.day_of_week}, {entry.date.strftime('%B %d, %Y')} "
+        f"(Day {entry.day_of_year})",
+        "",
+        f"**Daily Theme:** {entry.daily_theme}",
+        f"**Overall Energy:** {entry.biorhythm.overall_energy} | "
+        f"**Risk Level:** {entry.risk_analysis.overall_risk_level}",
+        "",
+        f"### Moon",
+        f"- Phase: {entry.moon.phase} ({entry.moon.phase_percentage:.0f}%) "
+        f"in {entry.moon.zodiac_sign}",
+        f"- Element: {entry.moon.sign_element} | "
+        f"Modality: {entry.moon.sign_modality}",
+        f"- Energy: {entry.moon.energy_theme}",
+        "",
+        f"### Numerology",
+        f"- Personal Day {entry.numerology.personal_day} "
+        f"(Universal Day {entry.numerology.universal_day})",
+        f"- Theme: {entry.numerology.day_theme}",
+        "",
+        f"### Biorhythm",
+        f"- Physical: {entry.biorhythm.physical:+.0f}% "
+        f"({entry.biorhythm.physical_phase})",
+        f"- Emotional: {entry.biorhythm.emotional:+.0f}% "
+        f"({entry.biorhythm.emotional_phase})",
+        f"- Intellectual: {entry.biorhythm.intellectual:+.0f}% "
+        f"({entry.biorhythm.intellectual_phase})",
+        "",
+        f"### Exercise",
+        f"- {entry.exercise.exercise_type} ({entry.exercise.intensity})",
+        f"- Time: {entry.exercise.optimal_time} | "
+        f"Duration: {entry.exercise.duration_minutes} min",
+        "",
+        f"### Spiritual Reading",
+        f"- {entry.spiritual_reading.source_title}",
+        f'- "{entry.spiritual_reading.reading_text[:200]}"',
+        "",
+        f"### Affirmation",
+        f'> "{entry.affirmation}"',
+        "",
+        "---",
+        "*Generated by SKSkyforge - staycuriousANDkeepsmilin*",
+    ]
+    return "\n".join(lines)
+
+
+@cli.command()
+@click.option("--profile", "-p", default="default", help="Profile name to use")
+@click.option(
+    "--format",
+    "-f",
+    "fmt",
+    type=click.Choice(["text", "json", "markdown"]),
+    default="text",
+    help="Output format",
+)
+@click.option(
+    "--output",
+    "-o",
+    "output_target",
+    type=click.Choice(["stdout", "file"]),
+    default="stdout",
+    help="Where to send the report",
+)
+def daily(profile: str, fmt: str, output_target: str):
+    """Generate today's sovereign alignment report.
+
+    Designed for crontab / systemd timer use. Runs non-interactively
+    and outputs the daily alignment for the given profile.
+
+    Examples:
+
+        skskyforge daily
+
+        skskyforge daily --profile lumina --format markdown
+
+        skskyforge daily --format json --output file
+    """
+    profiles_dir = get_profiles_dir()
+    profile_path = profiles_dir / f"{profile}.yaml"
+
+    if not profile_path.exists():
+        console.print(f"[red]Error:[/red] Profile '{profile}' not found.")
+        console.print(
+            "Create one with: "
+            f"[cyan]skskyforge profile create --name {profile} "
+            "--birth-date YYYY-MM-DD[/cyan]"
+        )
+        raise SystemExit(1)
+
+    user_profile = UserProfile.load(profile_path)
+    today = date.today()
+    entry = generate_daily_entry(today, user_profile)
+
+    if fmt == "json":
+        content = json.dumps(entry.model_dump(mode="json"), indent=2, default=str)
+    elif fmt == "markdown":
+        content = format_daily_markdown(entry)
+    else:
+        content = format_daily_markdown(entry)
+
+    if output_target == "file":
+        output_dir = get_output_dir()
+        filename = f"skskyforge_daily_{today.isoformat()}.{'json' if fmt == 'json' else 'md'}"
+        filepath = output_dir / filename
+        with open(filepath, "w") as f:
+            f.write(content)
+        console.print(f"[green]Daily report written to {filepath}[/green]")
+    else:
+        if fmt == "text":
+            display_daily_entry(entry)
+        else:
+            click.echo(content)
+
+
+# =============================================================================
+# Install / Uninstall Daily Timer
+# =============================================================================
+
+SYSTEMD_SERVICE_TEMPLATE = textwrap.dedent("""\
+    [Unit]
+    Description=SKSkyforge Daily Alignment Report
+    After=network.target
+
+    [Service]
+    Type=oneshot
+    ExecStart={exe} daily --profile {profile} --format {fmt} --output {output}
+    Environment=HOME={home}
+""")
+
+SYSTEMD_TIMER_TEMPLATE = textwrap.dedent("""\
+    [Unit]
+    Description=SKSkyforge Daily Alignment Timer
+
+    [Timer]
+    OnCalendar=*-*-* {hour}:{minute}:00
+    Persistent=true
+
+    [Install]
+    WantedBy=timers.target
+""")
+
+
+@cli.command("install-daily")
+@click.option("--time", "-t", default="08:00", help="Time to run (HH:MM, default 08:00)")
+@click.option("--profile", "-p", default="default", help="Profile name")
+@click.option(
+    "--format",
+    "-f",
+    "fmt",
+    type=click.Choice(["text", "markdown", "json"]),
+    default="markdown",
+    help="Report format",
+)
+@click.option(
+    "--output",
+    "-o",
+    "output_target",
+    type=click.Choice(["stdout", "file"]),
+    default="file",
+    help="Output target",
+)
+def install_daily(time: str, profile: str, fmt: str, output_target: str):
+    """Install a daily cron job or systemd timer for morning reports.
+
+    Creates a systemd user timer (preferred) or crontab entry as fallback
+    that runs `skskyforge daily` at the specified time each morning.
+
+    Examples:
+
+        skskyforge install-daily
+
+        skskyforge install-daily --time 07:30 --profile lumina
+    """
+    try:
+        hour, minute = time.split(":")
+        int(hour)
+        int(minute)
+    except (ValueError, AttributeError):
+        console.print("[red]Error:[/red] Invalid time format. Use HH:MM")
+        raise SystemExit(1)
+
+    exe = shutil.which("skskyforge") or "skskyforge"
+
+    # Reason: prefer systemd user timers over crontab -- more reliable, supports
+    # logging, and integrates with `systemctl --user status`
+    systemd_dir = Path.home() / ".config" / "systemd" / "user"
+    use_systemd = systemd_dir.exists() or _can_create_systemd_dir(systemd_dir)
+
+    if use_systemd:
+        _install_systemd_timer(
+            systemd_dir, exe, profile, fmt, output_target, hour, minute
+        )
+    else:
+        _install_crontab(exe, profile, fmt, output_target, hour, minute)
+
+
+def _can_create_systemd_dir(path: Path) -> bool:
+    """Check if we can create the systemd user directory."""
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+        return True
+    except OSError:
+        return False
+
+
+def _install_systemd_timer(
+    systemd_dir: Path,
+    exe: str,
+    profile: str,
+    fmt: str,
+    output_target: str,
+    hour: str,
+    minute: str,
+) -> None:
+    """Install systemd user service and timer files."""
+    service_content = SYSTEMD_SERVICE_TEMPLATE.format(
+        exe=exe,
+        profile=profile,
+        fmt=fmt,
+        output=output_target,
+        home=str(Path.home()),
+    )
+    timer_content = SYSTEMD_TIMER_TEMPLATE.format(hour=hour, minute=minute)
+
+    service_path = systemd_dir / "skskyforge-daily.service"
+    timer_path = systemd_dir / "skskyforge-daily.timer"
+
+    service_path.write_text(service_content)
+    timer_path.write_text(timer_content)
+
+    subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
+    subprocess.run(
+        ["systemctl", "--user", "enable", "--now", "skskyforge-daily.timer"],
+        check=False,
+    )
+
+    console.print(
+        f"[green]Systemd timer installed![/green] "
+        f"Daily report at {hour}:{minute} for profile '{profile}'."
+    )
+    console.print(
+        "  Check status: [cyan]systemctl --user status skskyforge-daily.timer[/cyan]"
+    )
+
+
+def _install_crontab(
+    exe: str,
+    profile: str,
+    fmt: str,
+    output_target: str,
+    hour: str,
+    minute: str,
+) -> None:
+    """Install a crontab entry as fallback."""
+    cron_line = (
+        f"{minute} {hour} * * * "
+        f"{exe} daily --profile {profile} --format {fmt} --output {output_target}"
+    )
+
+    result = subprocess.run(
+        ["crontab", "-l"], capture_output=True, text=True, check=False
+    )
+    existing = result.stdout if result.returncode == 0 else ""
+
+    if "skskyforge daily" in existing:
+        console.print("[yellow]Crontab entry already exists. Replacing...[/yellow]")
+        lines = [
+            l for l in existing.splitlines() if "skskyforge daily" not in l
+        ]
+        existing = "\n".join(lines) + "\n"
+
+    new_crontab = existing.rstrip("\n") + "\n" + cron_line + "\n"
+    proc = subprocess.run(
+        ["crontab", "-"], input=new_crontab, text=True, check=False
+    )
+
+    if proc.returncode == 0:
+        console.print(
+            f"[green]Crontab entry installed![/green] "
+            f"Daily report at {hour}:{minute} for profile '{profile}'."
+        )
+    else:
+        console.print("[red]Failed to install crontab entry.[/red]")
+
+
+@cli.command("uninstall-daily")
+def uninstall_daily():
+    """Remove the daily report timer/cron job.
+
+    Removes the systemd timer if present, or the crontab entry.
+    """
+    systemd_dir = Path.home() / ".config" / "systemd" / "user"
+    service_path = systemd_dir / "skskyforge-daily.service"
+    timer_path = systemd_dir / "skskyforge-daily.timer"
+
+    removed = False
+    if timer_path.exists():
+        subprocess.run(
+            ["systemctl", "--user", "disable", "--now", "skskyforge-daily.timer"],
+            check=False,
+        )
+        timer_path.unlink(missing_ok=True)
+        service_path.unlink(missing_ok=True)
+        subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
+        console.print("[green]Systemd timer removed.[/green]")
+        removed = True
+
+    result = subprocess.run(
+        ["crontab", "-l"], capture_output=True, text=True, check=False
+    )
+    if result.returncode == 0 and "skskyforge daily" in result.stdout:
+        lines = [
+            l for l in result.stdout.splitlines() if "skskyforge daily" not in l
+        ]
+        subprocess.run(
+            ["crontab", "-"],
+            input="\n".join(lines) + "\n",
+            text=True,
+            check=False,
+        )
+        console.print("[green]Crontab entry removed.[/green]")
+        removed = True
+
+    if not removed:
+        console.print("[yellow]No daily timer/cron found to remove.[/yellow]")
+
+
+# =============================================================================
 # Profile Commands
 # =============================================================================
 
@@ -285,9 +632,9 @@ def profile_create(name: str, birth_date: str, birth_time: Optional[str],
     
     Examples:
     
-        skyforge profile create --name john --birth-date 1985-03-15
+        skskyforge profile create --name john --birth-date 1985-03-15
         
-        skyforge profile create --name jane --birth-date 1990-07-22 \\
+        skskyforge profile create --name jane --birth-date 1990-07-22 \\
             --birth-time 14:30 --birth-location "New York, NY, USA"
     """
     # Parse birth date
@@ -350,7 +697,7 @@ def profile_list():
     
     if not profiles:
         console.print("[yellow]No profiles found.[/yellow]")
-        console.print("Create one with: [cyan]skyforge profile create --name myname --birth-date YYYY-MM-DD[/cyan]")
+        console.print("Create one with: [cyan]skskyforge profile create --name myname --birth-date YYYY-MM-DD[/cyan]")
         return
     
     table = Table(title="Available Profiles")
