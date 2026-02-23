@@ -10,6 +10,7 @@ Licensed under AGPL-3.0. See LICENSE for details.
 
 import json
 import os
+import platform
 import shutil
 import subprocess
 import textwrap
@@ -442,10 +443,11 @@ SYSTEMD_TIMER_TEMPLATE = textwrap.dedent("""\
     help="Output target",
 )
 def install_daily(time: str, profile: str, fmt: str, output_target: str):
-    """Install a daily cron job or systemd timer for morning reports.
+    """Install a scheduled daily report (systemd/crontab/Task Scheduler).
 
-    Creates a systemd user timer (preferred) or crontab entry as fallback
-    that runs `skskyforge daily` at the specified time each morning.
+    On Linux: systemd user timer (preferred) or crontab fallback.
+    On macOS: launchd plist or crontab fallback.
+    On Windows: Windows Task Scheduler via schtasks.
 
     Examples:
 
@@ -462,6 +464,10 @@ def install_daily(time: str, profile: str, fmt: str, output_target: str):
         raise SystemExit(1)
 
     exe = shutil.which("skskyforge") or "skskyforge"
+
+    if platform.system() == "Windows":
+        _install_windows_task(exe, profile, fmt, output_target, hour, minute)
+        return
 
     # Reason: prefer systemd user timers over crontab -- more reliable, supports
     # logging, and integrates with `systemctl --user status`
@@ -565,46 +571,101 @@ def _install_crontab(
         console.print("[red]Failed to install crontab entry.[/red]")
 
 
+WINDOWS_TASK_NAME = "SKSkyforgeDaily"
+
+
+def _install_windows_task(
+    exe: str,
+    profile: str,
+    fmt: str,
+    output_target: str,
+    hour: str,
+    minute: str,
+) -> None:
+    """Install a Windows Task Scheduler entry via schtasks."""
+    cmd_line = f'"{exe}" daily --profile {profile} --format {fmt} --output {output_target}'
+    schtasks_cmd = [
+        "schtasks",
+        "/Create",
+        "/SC", "DAILY",
+        "/TN", WINDOWS_TASK_NAME,
+        "/TR", cmd_line,
+        "/ST", f"{hour}:{minute}",
+        "/F",
+    ]
+
+    proc = subprocess.run(schtasks_cmd, capture_output=True, text=True, check=False)
+
+    if proc.returncode == 0:
+        console.print(
+            f"[green]Windows Task Scheduler entry installed![/green] "
+            f"Daily report at {hour}:{minute} for profile '{profile}'."
+        )
+        console.print(
+            f"  Check status: [cyan]schtasks /Query /TN {WINDOWS_TASK_NAME}[/cyan]"
+        )
+    else:
+        console.print(f"[red]Failed to create scheduled task:[/red] {proc.stderr.strip()}")
+
+
+def _uninstall_windows_task() -> bool:
+    """Remove the Windows Task Scheduler entry."""
+    proc = subprocess.run(
+        ["schtasks", "/Delete", "/TN", WINDOWS_TASK_NAME, "/F"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode == 0:
+        console.print("[green]Windows scheduled task removed.[/green]")
+        return True
+    return False
+
+
 @cli.command("uninstall-daily")
 def uninstall_daily():
-    """Remove the daily report timer/cron job.
+    """Remove the daily report timer/cron/scheduled task.
 
-    Removes the systemd timer if present, or the crontab entry.
+    Removes the systemd timer, crontab entry, or Windows scheduled task.
     """
-    systemd_dir = Path.home() / ".config" / "systemd" / "user"
-    service_path = systemd_dir / "skskyforge-daily.service"
-    timer_path = systemd_dir / "skskyforge-daily.timer"
-
     removed = False
-    if timer_path.exists():
-        subprocess.run(
-            ["systemctl", "--user", "disable", "--now", "skskyforge-daily.timer"],
-            check=False,
-        )
-        timer_path.unlink(missing_ok=True)
-        service_path.unlink(missing_ok=True)
-        subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
-        console.print("[green]Systemd timer removed.[/green]")
-        removed = True
 
-    result = subprocess.run(
-        ["crontab", "-l"], capture_output=True, text=True, check=False
-    )
-    if result.returncode == 0 and "skskyforge daily" in result.stdout:
-        lines = [
-            l for l in result.stdout.splitlines() if "skskyforge daily" not in l
-        ]
-        subprocess.run(
-            ["crontab", "-"],
-            input="\n".join(lines) + "\n",
-            text=True,
-            check=False,
+    if platform.system() == "Windows":
+        removed = _uninstall_windows_task()
+    else:
+        systemd_dir = Path.home() / ".config" / "systemd" / "user"
+        service_path = systemd_dir / "skskyforge-daily.service"
+        timer_path = systemd_dir / "skskyforge-daily.timer"
+
+        if timer_path.exists():
+            subprocess.run(
+                ["systemctl", "--user", "disable", "--now", "skskyforge-daily.timer"],
+                check=False,
+            )
+            timer_path.unlink(missing_ok=True)
+            service_path.unlink(missing_ok=True)
+            subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
+            console.print("[green]Systemd timer removed.[/green]")
+            removed = True
+
+        result = subprocess.run(
+            ["crontab", "-l"], capture_output=True, text=True, check=False
         )
-        console.print("[green]Crontab entry removed.[/green]")
-        removed = True
+        if result.returncode == 0 and "skskyforge daily" in result.stdout:
+            lines = [
+                l for l in result.stdout.splitlines() if "skskyforge daily" not in l
+            ]
+            subprocess.run(
+                ["crontab", "-"],
+                input="\n".join(lines) + "\n",
+                text=True,
+                check=False,
+            )
+            console.print("[green]Crontab entry removed.[/green]")
+            removed = True
 
     if not removed:
-        console.print("[yellow]No daily timer/cron found to remove.[/yellow]")
+        console.print("[yellow]No daily timer/cron/task found to remove.[/yellow]")
 
 
 # =============================================================================
