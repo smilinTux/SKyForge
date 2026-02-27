@@ -37,6 +37,22 @@ from .moon import (
     SIGN_MODALITIES,
 )
 
+from .solar import (
+    calculate_sun_position,
+    get_sun_sign,
+    calculate_house_focus,
+    HOUSE_THEMES,
+)
+
+from .planets import (
+    calculate_planetary_positions,
+    calculate_aspects,
+    calculate_hd_gates,
+    longitude_to_hd_gate,
+    PLANET_NAMES,
+    MAJOR_ASPECTS,
+)
+
 __all__ = [
     # Numerology
     "calculate_life_path",
@@ -61,4 +77,16 @@ __all__ = [
     "ZODIAC_SIGNS",
     "SIGN_ELEMENTS",
     "SIGN_MODALITIES",
+    # Solar
+    "calculate_sun_position",
+    "get_sun_sign",
+    "calculate_house_focus",
+    "HOUSE_THEMES",
+    # Planets
+    "calculate_planetary_positions",
+    "calculate_aspects",
+    "calculate_hd_gates",
+    "longitude_to_hd_gate",
+    "PLANET_NAMES",
+    "MAJOR_ASPECTS",
 ]

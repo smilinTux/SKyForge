@@ -715,11 +715,26 @@ def profile_create(name: str, birth_date: str, birth_time: Optional[str],
             console.print("[red]Error:[/red] Invalid birth time format. Use HH:MM")
             raise SystemExit(1)
     
-    # Create location if provided
+    # Create location if provided (with geocoding)
     location = None
     if birth_location:
-        location = Location(city=birth_location)
-    
+        from .services.geocoding import geocode_city
+
+        geo = geocode_city(birth_location)
+        if geo:
+            location = Location(
+                city=geo.display_name,
+                latitude=geo.latitude,
+                longitude=geo.longitude,
+                timezone=geo.timezone,
+            )
+            console.print(f"  [dim]Geocoded → {geo.display_name}[/dim]")
+            console.print(f"  [dim]Coordinates: {geo.latitude}, {geo.longitude}[/dim]")
+            console.print(f"  [dim]Timezone: {geo.timezone}[/dim]")
+        else:
+            location = Location(city=birth_location)
+            console.print(f"  [yellow]Could not geocode '{birth_location}', using city name only[/yellow]")
+
     # Create birth data
     birth_data = BirthData(
         date=bd,
@@ -746,7 +761,9 @@ def profile_create(name: str, birth_date: str, birth_time: Optional[str],
     console.print(f"  Birth Date: {bd}")
     console.print(f"  Life Path: {life_path}")
     if location:
-        console.print(f"  Location: {birth_location}")
+        console.print(f"  Location: {location}")
+        if location.has_coordinates():
+            console.print(f"  Timezone: {location.timezone}")
 
 
 @profile.command("list")

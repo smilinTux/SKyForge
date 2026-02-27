@@ -34,6 +34,13 @@ from ..calculators import (
     calculate_numerology_for_day,
     calculate_biorhythm_for_day,
     calculate_life_path,
+    calculate_sun_position,
+    get_sun_sign,
+    calculate_house_focus,
+    calculate_planetary_positions,
+    calculate_aspects,
+    calculate_hd_gates,
+    HOUSE_THEMES,
 )
 from ..analyzers import (
     calculate_risk_analysis,
@@ -49,62 +56,34 @@ from ..analyzers import (
 def generate_solar_transit(target_date: date, profile: UserProfile) -> SolarTransitData:
     """
     Generate solar transit data for a day.
-    
-    This is a simplified version. Full implementation would use
-    Swiss Ephemeris for accurate solar return calculations.
-    
+
+    Uses Swiss Ephemeris (via calculators.solar and calculators.planets)
+    for accurate sun sign, house focus, and planetary aspect calculations.
+
     Args:
         target_date: Date to calculate for.
         profile: User profile with birth data.
-    
+
     Returns:
         SolarTransitData: Solar transit information.
     """
-    from ..calculators.moon import ZODIAC_SIGNS, SIGN_ELEMENTS
-    
-    # Simple sun sign calculation based on date
-    # This is approximate; production would use ephemeris
-    month = target_date.month
-    day = target_date.day
-    
-    sun_signs = [
-        (1, 20, "Capricorn"), (2, 19, "Aquarius"), (3, 20, "Pisces"),
-        (4, 20, "Aries"), (5, 21, "Taurus"), (6, 21, "Gemini"),
-        (7, 22, "Cancer"), (8, 23, "Leo"), (9, 23, "Virgo"),
-        (10, 23, "Libra"), (11, 22, "Scorpio"), (12, 22, "Sagittarius"),
-    ]
-    
-    sun_sign = "Capricorn"
-    for end_month, end_day, sign in sun_signs:
-        if month < end_month or (month == end_month and day <= end_day):
-            sun_sign = sign
-            break
-    
-    # Simple house focus based on day of year
-    day_of_year = target_date.timetuple().tm_yday
-    house_focus = ((day_of_year - 1) // 30) % 12 + 1
-    
-    house_themes = {
-        1: "Self & Identity",
-        2: "Resources & Values",
-        3: "Communication & Learning",
-        4: "Home & Foundation",
-        5: "Creativity & Joy",
-        6: "Health & Service",
-        7: "Partnerships & Relationships",
-        8: "Transformation & Shared Resources",
-        9: "Expansion & Philosophy",
-        10: "Career & Public Image",
-        11: "Community & Aspirations",
-        12: "Spirituality & Release",
-    }
-    
+    # Accurate sun sign from ephemeris
+    sun_sign = get_sun_sign(target_date)
+
+    # House focus from natal-to-transit solar arc
+    house_focus = calculate_house_focus(target_date, profile.birth_data.date)
+    house_theme = HOUSE_THEMES[house_focus]
+
+    # Planetary aspects from real ephemeris positions
+    positions = calculate_planetary_positions(target_date)
+    planetary_aspects = calculate_aspects(positions)
+
     return SolarTransitData(
         sun_sign=sun_sign,
         house_focus=house_focus,
-        house_theme=house_themes[house_focus],
-        planetary_aspects=[],  # Would be calculated with ephemeris
-        transit_message=f"Focus on {house_themes[house_focus].lower()} matters today",
+        house_theme=house_theme,
+        planetary_aspects=planetary_aspects,
+        transit_message=f"Focus on {house_theme.lower()} matters today",
     )
 
 
@@ -158,18 +137,19 @@ def generate_human_design(target_date: date, profile: UserProfile) -> HumanDesig
         "Reflector": "Watch for disappointment if rushing decisions",
     }
     
-    # Simple gate calculation based on day of year
-    day_of_year = target_date.timetuple().tm_yday
-    base_gate = ((day_of_year * 7) % 64) + 1
-    
+    # Calculate gate activations from real planetary positions
+    positions = calculate_planetary_positions(target_date)
+    hd_gates = calculate_hd_gates(positions)
+
     active_gates = [
         GateData(
-            gate_number=base_gate,
-            gate_name=f"Gate {base_gate}",
-            line=(day_of_year % 6) + 1,
-            planet="Sun",
+            gate_number=gate,
+            gate_name=f"Gate {gate}",
+            line=line,
+            planet=planet,
             theme="Daily activation",
         )
+        for planet, gate, line in hd_gates
     ]
     
     return HumanDesignData(

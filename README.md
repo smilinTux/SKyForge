@@ -107,6 +107,7 @@ skskyforge/
 
 ## 📖 Documentation
 
+- **[CLI Quickstart](docs/CLI_QUICKSTART.md)** - Get started in 5 minutes
 - **[agent.md](agent.md)** - Technical specifications for developers
 - **[prd.txt](prd.txt)** - Product requirements document
 
