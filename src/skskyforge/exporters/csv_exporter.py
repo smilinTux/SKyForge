@@ -4,7 +4,7 @@ CSV exporter for SKSkyforge daily entries.
 Exports a flat tabular view of daily alignment data suitable for
 spreadsheet analysis and data science workflows.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 Licensed under AGPL-3.0.
 """
 

@@ -4,7 +4,7 @@ Planetary position and aspect calculator for SKSkyforge.
 Calculates ecliptic longitudes for the classical and modern planets,
 then derives major aspects between them.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin
 
 This file is part of SKSkyforge.

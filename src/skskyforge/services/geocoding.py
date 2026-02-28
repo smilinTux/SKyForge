@@ -4,7 +4,7 @@ Geocoding and timezone detection service for SKSkyforge.
 Uses geopy (Nominatim) for geocoding city names to coordinates,
 and timezonefinder for automatic timezone detection from coordinates.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin
 
 This file is part of SKSkyforge.

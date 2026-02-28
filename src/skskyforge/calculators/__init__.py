@@ -1,7 +1,7 @@
 """
 SKSkyforge calculators.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin 🐧
 
 This file is part of SKSkyforge.

@@ -4,7 +4,7 @@ Daily entry generator for SKSkyforge.
 Orchestrates all calculators and analyzers to produce complete
 daily sovereign alignment guides.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin 🐧
 
 This file is part of SKSkyforge.

@@ -1,7 +1,7 @@
 """
 Tests for PDF, CSV, and Excel exporters.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin
 """
 

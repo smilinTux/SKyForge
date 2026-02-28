@@ -3,7 +3,7 @@ SKSkyforge - Sovereign Alignment Calendar System
 
 "Forge your sovereign path through the cosmos"
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 SK = staycuriousANDkeepsmilin 🐧
 
 This file is part of SKSkyforge.
@@ -11,7 +11,7 @@ Licensed under AGPL-3.0. See LICENSE for details.
 """
 
 __version__ = "1.0.0"
-__author__ = "S&K Holding QT (Quantum Technologies)"
+__author__ = "smilinTux"
 __license__ = "AGPL-3.0"
 
 from .models import (

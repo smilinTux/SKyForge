@@ -3,7 +3,7 @@ PDF exporter for SKSkyforge daily entries.
 
 Generates a styled PDF report with sovereign branding using ReportLab.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 Licensed under AGPL-3.0.
 """
 

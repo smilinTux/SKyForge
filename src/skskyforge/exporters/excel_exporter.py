@@ -4,7 +4,7 @@ Excel exporter for SKSkyforge daily entries.
 Produces an .xlsx workbook with styled sheets for overview,
 moon phases, numerology, biorhythm, and planetary data.
 
-Copyright (C) 2025 S&K Holding QT (Quantum Technologies)
+Copyright (C) 2025 smilinTux
 Licensed under AGPL-3.0.
 """
 
